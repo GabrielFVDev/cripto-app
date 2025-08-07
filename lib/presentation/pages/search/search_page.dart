@@ -5,6 +5,15 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Search Coins'),
+      ),
+      body: Center(
+        child: Text(
+          'Search functionality will be implemented here.',
+        ),
+      ),
+    );
   }
 }
