@@ -1,8 +1,8 @@
-import 'package:cripto_app/core/constants/api_constants.dart';
-import 'package:cripto_app/core/constants/routes.dart';
-import 'package:cripto_app/data/data.dart';
-import 'package:cripto_app/domain/domain.dart';
-import 'package:cripto_app/presentation/blocs/bloc.dart';
+import 'package:cointrack/core/constants/api_constants.dart';
+import 'package:cointrack/core/constants/routes.dart';
+import 'package:cointrack/data/data.dart';
+import 'package:cointrack/domain/domain.dart';
+import 'package:cointrack/presentation/blocs/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Cripto App',
+      title: 'CoinTrack',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),

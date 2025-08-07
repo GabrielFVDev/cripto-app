@@ -1,5 +1,5 @@
-import 'package:cripto_app/data/models/coin_model.dart';
-import 'package:cripto_app/domain/repositories/coin_repository.dart';
+import 'package:cointrack/data/models/coin_model.dart';
+import 'package:cointrack/domain/repositories/coin_repository.dart';
 
 class GetCoins {
   final CoinRepository repository;

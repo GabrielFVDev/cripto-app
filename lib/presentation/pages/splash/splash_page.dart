@@ -5,6 +5,16 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            child: CircularProgressIndicator(),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
   }
 }

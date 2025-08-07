@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cripto_app/presentation/pages/pages.dart';
+import 'package:cointrack/presentation/pages/pages.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[

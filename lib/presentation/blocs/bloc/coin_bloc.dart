@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cripto_app/presentation/blocs/bloc.dart';
-import 'package:cripto_app/domain/usecases/get_coins.dart';
+import 'package:cointrack/presentation/blocs/bloc.dart';
+import 'package:cointrack/domain/usecases/get_coins.dart';
 
 class CoinBloc extends Bloc<CoinEvent, CoinState> {
   final GetCoins getCoins;
