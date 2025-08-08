@@ -57,6 +57,8 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
+              const SizedBox(height: 24),
+
               CoinTrackerCard(
                 title: 'Mercado de Criptomonedas',
                 description:
@@ -73,9 +75,17 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 24),
 
-              // Header "Principais Moedas"
-              const SectionHeader(
-                title: 'Principais Moedas',
+              Row(
+                children: [
+                  Text(
+                    "Principais Moedas",
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 16),
