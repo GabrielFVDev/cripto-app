@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
 
 class CoinTrackerAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -13,11 +14,11 @@ class CoinTrackerAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF0F131A),
+      backgroundColor: AppColors.appBarBackground,
       title: Text(
         title,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -35,6 +36,5 @@ class CoinTrackerAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

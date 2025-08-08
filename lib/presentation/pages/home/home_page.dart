@@ -1,5 +1,7 @@
-import 'package:cointrack/presentation/widgets/appbar/coin_tracker_app_bar.dart';
-import 'package:cointrack/presentation/widgets/cards/coin_tracker_card.dart';
+import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/data/models/crypto_data.dart';
+import 'package:cointrack/data/services/crypto_data_service.dart';
+import 'package:cointrack/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,14 +12,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  List<CryptoData> _allCryptoList = [];
+  List<CryptoData> _filteredCryptoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _allCryptoList = CryptoDataService.getCryptoList();
+    _filteredCryptoList = _allCryptoList;
+  }
+
+  void _filterCryptoList(String query) {
+    setState(() {
+      _filteredCryptoList = CryptoDataService.searchCrypto(
+        _allCryptoList,
+        query,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F131A),
+      backgroundColor: AppColors.appBarBackground,
       appBar: CoinTrackerAppBar(
         title: 'CoinTracker',
         onPressed: () {
-          // Implement search before
+          setState(() {
+            _isSearching = !_isSearching;
+          });
         },
       ),
       body: SingleChildScrollView(
@@ -30,7 +62,34 @@ class _HomePageState extends State<HomePage> {
                 description:
                     'Acompanhe as principais moedas digitais em tempo real',
               ),
-              // Add more widgets here for the home page content
+
+              const SizedBox(height: 20),
+
+              // Search Bar
+              CryptoSearchBar(
+                controller: _searchController,
+                onChanged: _filterCryptoList,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Header "Principais Moedas"
+              const SectionHeader(
+                title: 'Principais Moedas',
+              ),
+
+              const SizedBox(height: 16),
+
+              // Lista de Criptomoedas
+              CryptoList(
+                cryptoList: _filteredCryptoList,
+                onCryptoTap: (crypto) {
+                  // Implementar navegação para detalhes
+                  print('Tapped on ${crypto.name}');
+                },
+              ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
