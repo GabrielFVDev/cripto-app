@@ -1,7 +1,10 @@
 import 'package:cointrack/core/constants/app_colors.dart';
 import 'package:cointrack/data/models/crypto_data.dart';
 import 'package:cointrack/data/services/crypto_data_service.dart';
-import 'package:cointrack/presentation/widgets/widgets.dart';
+import 'package:cointrack/presentation/widgets/appbar/coin_tracker_app_bar.dart';
+import 'package:cointrack/presentation/widgets/cards/coin_tracker_card.dart';
+import 'package:cointrack/presentation/widgets/crypto/crypto_list_item.dart';
+import 'package:cointrack/presentation/widgets/search/crypto_search_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -91,13 +94,32 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 16),
 
               // Lista de Criptomoedas
-              CryptoList(
-                cryptoList: _filteredCryptoList,
-                onCryptoTap: (crypto) {
-                  // Implementar navegação para detalhes
-                  print('Tapped on ${crypto.name}');
-                },
-              ),
+              _filteredCryptoList.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Text(
+                          'Nenhuma criptomoeda encontrada',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: _filteredCryptoList
+                          .map(
+                            (crypto) => CryptoListItem(
+                              crypto: crypto,
+                              onTap: () {
+                                // Implementar navegação para detalhes
+                                print('Tapped on ${crypto.name}');
+                              },
+                            ),
+                          )
+                          .toList(),
+                    ),
 
               const SizedBox(height: 20),
             ],
