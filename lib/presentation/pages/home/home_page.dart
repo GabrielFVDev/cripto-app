@@ -1,11 +1,12 @@
 import 'package:cointrack/core/constants/app_colors.dart';
-import 'package:cointrack/data/models/crypto_data.dart';
-import 'package:cointrack/data/services/crypto_data_service.dart';
+import 'package:cointrack/domain/entities/coin_entity.dart';
+import 'package:cointrack/presentation/blocs/bloc.dart';
 import 'package:cointrack/presentation/widgets/appbar/coin_tracker_app_bar.dart';
 import 'package:cointrack/presentation/widgets/cards/coin_tracker_card.dart';
-import 'package:cointrack/presentation/widgets/crypto/crypto_list_item.dart';
+import 'package:cointrack/presentation/widgets/coin/coin_list_item.dart';
 import 'package:cointrack/presentation/widgets/search/crypto_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,23 +18,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
-
-  List<CryptoData> _allCryptoList = [];
-  List<CryptoData> _filteredCryptoList = [];
+  List<CoinEntity> _filteredCoinList = [];
+  List<CoinEntity> _allCoinList = [];
 
   @override
   void initState() {
     super.initState();
-    _allCryptoList = CryptoDataService.getCryptoList();
-    _filteredCryptoList = _allCryptoList;
+    context.read<CoinBloc>().add(FetchCoinsEvent());
   }
 
-  void _filterCryptoList(String query) {
+  void _filterCoinList(String query) {
     setState(() {
-      _filteredCryptoList = CryptoDataService.searchCrypto(
-        _allCryptoList,
-        query,
-      );
+      if (query.isEmpty) {
+        _filteredCoinList = _allCoinList;
+      } else {
+        _filteredCoinList = _allCoinList
+            .where(
+              (coin) =>
+                  coin.name.toLowerCase().contains(query.toLowerCase()) ||
+                  coin.symbol.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
+      }
     });
   }
 
@@ -61,23 +67,18 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               const SizedBox(height: 24),
-
               CoinTrackerCard(
                 title: 'Mercado de Criptomonedas',
                 description:
                     'Acompanhe as principais moedas digitais em tempo real',
               ),
-
               const SizedBox(height: 20),
-
               // Search Bar
               CryptoSearchBar(
                 controller: _searchController,
-                onChanged: _filterCryptoList,
+                onChanged: _filterCoinList,
               ),
-
               const SizedBox(height: 24),
-
               Row(
                 children: [
                   Text(
@@ -90,37 +91,99 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 16),
-
-              // Lista de Criptomoedas
-              _filteredCryptoList.isEmpty
-                  ? const Center(
+              // Lista de Criptomoedas usando BlocBuilder
+              BlocBuilder<CoinBloc, CoinState>(
+                builder: (context, state) {
+                  if (state is CoinLoading) {
+                    return const Center(
                       child: Padding(
                         padding: EdgeInsets.all(32.0),
-                        child: Text(
-                          'Nenhuma criptomoeda encontrada',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
+                        child: CircularProgressIndicator(
+                          color: AppColors.white,
                         ),
                       ),
-                    )
-                  : Column(
-                      children: _filteredCryptoList
-                          .map(
-                            (crypto) => CryptoListItem(
-                              crypto: crypto,
-                              onTap: () {
-                                // Implementar navegação para detalhes
-                                print('Tapped on ${crypto.name}');
+                    );
+                  } else if (state is CoinError) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              state.message,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<CoinBloc>().add(FetchCoinsEvent());
                               },
+                              child: const Text('Tentar novamente'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else if (state is CoinLoaded) {
+                    _allCoinList = state.coins
+                        .take(50)
+                        .toList(); // Limitar a 50 moedas
+                    if (_filteredCoinList.isEmpty &&
+                        _searchController.text.isEmpty) {
+                      _filteredCoinList = _allCoinList;
+                    }
+
+                    return _filteredCoinList.isEmpty
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: Text(
+                                'Nenhuma criptomoeda encontrada',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           )
-                          .toList(),
-                    ),
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: _filteredCoinList.length,
+                              itemBuilder: (context, index) {
+                                final coin = _filteredCoinList[index];
+                                return CoinListItem(
+                                  coin: coin,
+                                  onTap: () {
+                                    // Implementar navegação para detalhes
+                                    print('Tapped on ${coin.name}');
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                  }
 
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Text(
+                        'Pressione o botão para carregar as moedas',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 20),
             ],
           ),

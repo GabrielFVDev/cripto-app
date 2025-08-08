@@ -1,5 +1,7 @@
 // entities
 
+export 'entities/coin_entity.dart';
+
 // repositories
 
 export 'repositories/coin_repository.dart';

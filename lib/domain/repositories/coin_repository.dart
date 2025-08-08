@@ -1,5 +1,5 @@
-import 'package:cointrack/data/models/coin_model.dart';
+import 'package:cointrack/domain/entities/coin_entity.dart';
 
 abstract class CoinRepository {
-  Future<List<CoinModel>> fetchCoins();
+  Future<List<CoinEntity>> fetchCoins();
 }

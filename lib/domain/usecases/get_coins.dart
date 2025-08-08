@@ -1,4 +1,4 @@
-import 'package:cointrack/data/models/coin_model.dart';
+import 'package:cointrack/domain/entities/coin_entity.dart';
 import 'package:cointrack/domain/repositories/coin_repository.dart';
 
 class GetCoins {
@@ -6,7 +6,7 @@ class GetCoins {
 
   GetCoins(this.repository);
 
-  Future<List<CoinModel>> execute() {
+  Future<List<CoinEntity>> execute() {
     return repository.fetchCoins();
   }
 }

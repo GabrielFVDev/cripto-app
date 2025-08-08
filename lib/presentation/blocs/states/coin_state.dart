@@ -1,4 +1,4 @@
-import 'package:cointrack/data/models/coin_model.dart';
+import 'package:cointrack/domain/entities/coin_entity.dart';
 
 abstract class CoinState {}
 
@@ -7,7 +7,7 @@ class CoinInitial extends CoinState {}
 class CoinLoading extends CoinState {}
 
 class CoinLoaded extends CoinState {
-  final List<CoinModel> coins;
+  final List<CoinEntity> coins;
 
   CoinLoaded(this.coins);
 }

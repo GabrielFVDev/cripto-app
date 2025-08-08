@@ -16,5 +16,11 @@ final GoRouter router = GoRouter(
         return const HomePage();
       },
     ),
+    GoRoute(
+      path: '/details',
+      builder: (context, state) {
+        return const DetailsPage();
+      },
+    ),
   ],
 );

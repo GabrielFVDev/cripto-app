@@ -1,5 +1,5 @@
-import 'package:cointrack/data/models/coin_model.dart';
 import 'package:cointrack/data/service/coin_remote_service.dart';
+import 'package:cointrack/domain/entities/coin_entity.dart';
 import 'package:cointrack/domain/repositories/coin_repository.dart';
 
 class CoinRepositoryImpl implements CoinRepository {
@@ -8,7 +8,8 @@ class CoinRepositoryImpl implements CoinRepository {
   CoinRepositoryImpl(this.remoteService);
 
   @override
-  Future<List<CoinModel>> fetchCoins() {
-    return remoteService.fetchCoins();
+  Future<List<CoinEntity>> fetchCoins() async {
+    final coinModels = await remoteService.fetchCoins();
+    return coinModels;
   }
 }
