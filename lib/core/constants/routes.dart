@@ -17,9 +17,10 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/details',
+      path: '/details/:coinId',
       builder: (context, state) {
-        return const DetailsPage();
+        final coinId = state.pathParameters['coinId'] ?? '';
+        return DetailsPage(coinId: coinId);
       },
     ),
   ],

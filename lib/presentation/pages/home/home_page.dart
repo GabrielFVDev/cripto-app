@@ -7,6 +7,7 @@ import 'package:cointrack/presentation/widgets/coin/coin_list_item.dart';
 import 'package:cointrack/presentation/widgets/search/crypto_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -161,8 +162,7 @@ class _HomePageState extends State<HomePage> {
                                 return CoinListItem(
                                   coin: coin,
                                   onTap: () {
-                                    // Implementar navegação para detalhes
-                                    print('Tapped on ${coin.name}');
+                                    context.push('/details/${coin.id}');
                                   },
                                 );
                               },
