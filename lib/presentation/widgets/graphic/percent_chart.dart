@@ -54,7 +54,11 @@ class PercentChart extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               '${isPositive ? '+' : ''}${percentage.toStringAsFixed(2)}%',
-              style: FontText.bodyLarge,
+              style: FontText.labelMedium.copyWith(
+                color: color,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
