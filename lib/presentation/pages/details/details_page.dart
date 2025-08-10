@@ -38,6 +38,12 @@ class _DetailsPageState extends State<DetailsPage>
       builder: (context, state) {
         String title = widget.coinId.toUpperCase();
         Widget content;
+
+        title = 'Carregando...'; // Título padrão
+        if (state is CoinDetailsLoaded) {
+          title = state.details.name; // Exibe o nome da moeda quando carregado
+        }
+
         if (state is CoinDetailsLoading || state is CoinDetailsInitial) {
           content = const Center(child: CircularProgressIndicator());
         } else if (state is CoinDetailsError) {
@@ -49,7 +55,6 @@ class _DetailsPageState extends State<DetailsPage>
           );
         } else if (state is CoinDetailsLoaded) {
           final d = state.details;
-          title = d.name;
           final history = state.history;
           var spots = history
               .asMap()
@@ -59,6 +64,7 @@ class _DetailsPageState extends State<DetailsPage>
           if (spots.length == 1) {
             spots = [FlSpot(0, spots.first.y), FlSpot(1, spots.first.y)];
           }
+
           content = SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -187,6 +193,7 @@ class _DetailsPageState extends State<DetailsPage>
                       SizedBox(
                         height: 180,
                         child: TabBarView(
+                          physics: NeverScrollableScrollPhysics(),
                           controller: _tabController,
                           children: [
                             PercentChart(
@@ -328,7 +335,7 @@ class _DetailsPageState extends State<DetailsPage>
             title: Text(title, style: const TextStyle(color: AppColors.white)),
             iconTheme: const IconThemeData(color: AppColors.white),
           ),
-          body: SingleChildScrollView(child: content),
+          body: content,
         );
       },
     );

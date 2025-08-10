@@ -15,13 +15,13 @@ class CoinListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 12),
       height: 80,
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.whiteWithOpacity20,
+          color: AppColors.darkBlueTransition,
           width: 1,
         ),
       ),

@@ -20,6 +20,7 @@ class CoinTrackerAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: const TextStyle(
             color: AppColors.white,
             fontSize: 20,
+            fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
           ),
         ),

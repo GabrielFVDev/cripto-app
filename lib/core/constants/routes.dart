@@ -12,8 +12,20 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return CustomTransitionPage(
+          child: const HomePage(),
+          transitionDuration: Durations.long3,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0), // Tela entra da direita
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+        );
       },
     ),
     GoRoute(
@@ -22,9 +34,13 @@ final GoRouter router = GoRouter(
         final coinId = state.pathParameters['coinId'] ?? '';
         return CustomTransitionPage(
           child: DetailsPage(coinId: coinId),
+          transitionDuration: Durations.long3,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0), // Tela entra da direita
+                end: Offset.zero,
+              ).animate(animation),
               child: child,
             );
           },

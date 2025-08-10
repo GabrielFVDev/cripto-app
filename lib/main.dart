@@ -1,4 +1,5 @@
 import 'package:cointrack/core/constants/api_constants.dart';
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:cointrack/core/constants/routes.dart';
 import 'package:cointrack/data/data.dart';
 import 'package:cointrack/domain/domain.dart';
@@ -40,6 +41,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CoinTrack',
       routerConfig: router,
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+        textTheme: TextTheme(
+          bodyLarge: FontText.bodyLarge,
+          bodyMedium: FontText.bodyMedium,
+          bodySmall: FontText.bodySmall,
+          labelLarge: FontText.labelLarge,
+          labelMedium: FontText.labelMedium,
+          labelSmall: FontText.labelSmall,
+        ),
+      ),
     );
   }
 }

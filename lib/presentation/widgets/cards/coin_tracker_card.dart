@@ -1,3 +1,4 @@
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -22,7 +23,7 @@ class CoinTrackerCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       width: double.infinity,
       constraints: const BoxConstraints(
-        minHeight: 120,
+        minHeight: 100,
       ),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -41,11 +42,7 @@ class CoinTrackerCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  color: AppColors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: FontText.titleLarge,
               ),
             ],
           ),
@@ -55,9 +52,7 @@ class CoinTrackerCard extends StatelessWidget {
                 child: Text(
                   description,
                   maxLines: 3,
-                  style: const TextStyle(
-                    color: AppColors.white,
-                  ),
+                  style: FontText.bodyLarge,
                 ),
               ),
             ],

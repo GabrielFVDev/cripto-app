@@ -216,6 +216,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                   'CriptoApp',
                                   style: TextStyle(
                                     fontSize: 28,
+                                    fontFamily: 'Roboto',
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                     letterSpacing: 1.2,
@@ -235,6 +236,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                   'Seu portal para o mundo crypto',
                                   style: TextStyle(
                                     fontSize: 14,
+                                    fontFamily: 'Roboto',
                                     color: Colors.white.withValues(alpha: 0.8),
                                     letterSpacing: 0.5,
                                   ),
@@ -272,6 +274,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                               'Carregando...',
                               style: TextStyle(
                                 fontSize: 12,
+                                fontFamily: 'Roboto',
                                 color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 0.8,
                               ),

@@ -152,9 +152,8 @@ class _HomePageState extends State<HomePage> {
                                 final coin = _filteredCoinList[index];
                                 return CoinListItem(
                                   coin: coin,
-                                  onTap: () {
-                                    context.push('/details/${coin.id}');
-                                  },
+                                  onTap: () =>
+                                      context.push('/details/${coin.id}'),
                                 );
                               },
                             ),
