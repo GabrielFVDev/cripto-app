@@ -14,25 +14,21 @@ class DetailsPage extends StatefulWidget {
   State<DetailsPage> createState() => _DetailsPageState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
-  String _formatLargeNumber(double value) {
-    if (value >= 1e12) {
-      return '\$${(value / 1e12).toStringAsFixed(2)}T';
-    } else if (value >= 1e9) {
-      return '\$${(value / 1e9).toStringAsFixed(2)}B';
-    } else if (value >= 1e6) {
-      return '\$${(value / 1e6).toStringAsFixed(2)}M';
-    } else if (value >= 1e3) {
-      return '\$${(value / 1e3).toStringAsFixed(2)}K';
-    } else {
-      return '\$${value.toStringAsFixed(2)}';
-    }
-  }
+class _DetailsPageState extends State<DetailsPage>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
     context.read<CoinDetailsBloc>().add(LoadCoinDetails(widget.coinId));
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -161,7 +157,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Chart card
+                // Chart carousel
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -171,55 +167,94 @@ class _DetailsPageState extends State<DetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Gráfico (7 dias)',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Gráficos',
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
+
                       const SizedBox(height: 12),
+                      // TabBarView
                       SizedBox(
                         height: 180,
-                        child: LineChart(
-                          LineChartData(
-                            titlesData: FlTitlesData(show: false),
-                            gridData: const FlGridData(show: false),
-                            borderData: FlBorderData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: spots,
-                                isCurved: true,
-                                color: Colors.green,
-                                barWidth: 2,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Colors.green.withOpacity(0.2),
-                                ),
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            _buildChart(
+                              percentage: d.changePercent1h,
+                              spots: _generateSpotsForPeriod(
+                                d.price,
+                                d.changePercent1h,
                               ),
-                            ],
-                          ),
+                            ),
+                            _buildChart(
+                              percentage: d.changePercent7d,
+                              spots: spots,
+                            ),
+                            _buildChart(
+                              percentage: d.changePercent30d,
+                              spots: _generateSpotsForPeriod(
+                                d.price,
+                                d.changePercent30d,
+                              ),
+                            ),
+                            _buildChart(
+                              percentage: d.changePercent1y,
+                              spots: _generateSpotsForPeriod(
+                                d.price,
+                                d.changePercent1y,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                // TabBar
+                TabBar(
+                  controller: _tabController,
+                  indicatorColor: AppColors.finalBlue,
+                  labelColor: AppColors.white,
+                  dividerColor: Colors.transparent,
+                  unselectedLabelColor: AppColors.whiteWithOpacity80,
+                  labelStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  unselectedLabelStyle: const TextStyle(fontSize: 12),
+                  tabs: const [
+                    Tab(text: '1 Hora'),
+                    Tab(text: '1 Semana'),
+                    Tab(text: '1 Mês'),
+                    Tab(text: '1 Ano'),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
                 // Stats
                 Row(
                   children: [
                     Expanded(
                       child: StatusCard(
-                        title: 'Market Cap',
+                        title: 'Valor de Mercado',
                         value: _formatLargeNumber(d.marketCap),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: StatusCard(
-                        title: 'Volume 24h',
+                        title: 'Volume 24 horas',
                         value: _formatLargeNumber(d.volume24h),
                       ),
                     ),
@@ -296,5 +331,93 @@ class _DetailsPageState extends State<DetailsPage> {
         );
       },
     );
+  }
+
+  Widget _buildChart({
+    required double percentage,
+    required List<FlSpot> spots,
+  }) {
+    final isPositive = percentage > 0;
+    final color = isPositive ? Colors.green : Colors.red;
+
+    return Column(
+      children: [
+        // Indicator row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isPositive ? Icons.trending_up : Icons.trending_down,
+              color: color,
+              size: 18,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${isPositive ? '+' : ''}${percentage.toStringAsFixed(2)}%',
+              style: TextStyle(
+                color: color,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // Chart
+        Expanded(
+          child: LineChart(
+            LineChartData(
+              titlesData: FlTitlesData(show: false),
+              gridData: const FlGridData(show: false),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: spots,
+                  isCurved: true,
+                  color: color,
+                  barWidth: 2,
+                  dotData: const FlDotData(show: false),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: color.withOpacity(0.2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatLargeNumber(double value) {
+    if (value >= 1e12) {
+      return '\$${(value / 1e12).toStringAsFixed(2)}T';
+    } else if (value >= 1e9) {
+      return '\$${(value / 1e9).toStringAsFixed(2)}B';
+    } else if (value >= 1e6) {
+      return '\$${(value / 1e6).toStringAsFixed(2)}M';
+    } else if (value >= 1e3) {
+      return '\$${(value / 1e3).toStringAsFixed(2)}K';
+    } else {
+      return '\$${value.toStringAsFixed(2)}';
+    }
+  }
+
+  List<FlSpot> _generateSpotsForPeriod(
+    double currentPrice,
+    double percentageChange,
+  ) {
+    final points = <FlSpot>[];
+    final startPrice = currentPrice / (1 + (percentageChange / 100));
+
+    // Gerar 10 pontos suaves entre o preço inicial e final
+    for (int i = 0; i < 10; i++) {
+      final progress = i / 9.0;
+      final price = startPrice + (currentPrice - startPrice) * progress;
+      points.add(FlSpot(i.toDouble(), price));
+    }
+
+    return points;
   }
 }

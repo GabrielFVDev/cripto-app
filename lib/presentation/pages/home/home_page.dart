@@ -56,11 +56,6 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.appBarBackground,
       appBar: CoinTrackerAppBar(
         title: 'CoinTracker',
-        onPressed: () {
-          setState(() {
-            _isSearching = !_isSearching;
-          });
-        },
       ),
       body: SingleChildScrollView(
         child: Padding(
