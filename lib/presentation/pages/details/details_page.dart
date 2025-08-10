@@ -60,13 +60,22 @@ class _DetailsPageState extends State<DetailsPage>
         } else if (state is CoinDetailsLoaded) {
           final d = state.details;
           final history = state.history;
-          var spots = history
+
+          // Processar dados históricos para 1 semana
+          var weekSpots = history
               .asMap()
               .entries
               .map((e) => FlSpot(e.key.toDouble(), e.value.price))
               .toList();
-          if (spots.length == 1) {
-            spots = [FlSpot(0, spots.first.y), FlSpot(1, spots.first.y)];
+
+          // Se temos poucos dados históricos, interpolar para criar mais pontos
+          if (weekSpots.length < 10 && weekSpots.length > 1) {
+            weekSpots = interpolateSpots(weekSpots, 15);
+          } else if (weekSpots.length == 1) {
+            weekSpots = [
+              FlSpot(0, weekSpots.first.y),
+              FlSpot(1, weekSpots.first.y),
+            ];
           }
 
           content = SingleChildScrollView(
@@ -202,27 +211,30 @@ class _DetailsPageState extends State<DetailsPage>
                           children: [
                             PercentChart(
                               percentage: d.changePercent1h,
-                              spots: generateSpotsForPeriod(
+                              spots: generateRealisticSpots(
                                 d.price,
                                 d.changePercent1h,
+                                numberOfPoints: 15,
                               ),
                             ),
                             PercentChart(
                               percentage: d.changePercent7d,
-                              spots: spots,
+                              spots: weekSpots,
                             ),
                             PercentChart(
                               percentage: d.changePercent30d,
-                              spots: generateSpotsForPeriod(
+                              spots: generateRealisticSpots(
                                 d.price,
                                 d.changePercent30d,
+                                numberOfPoints: 20,
                               ),
                             ),
                             PercentChart(
                               percentage: d.changePercent1y,
-                              spots: generateSpotsForPeriod(
+                              spots: generateRealisticSpots(
                                 d.price,
                                 d.changePercent1y,
+                                numberOfPoints: 30,
                               ),
                             ),
                           ],
