@@ -71,17 +71,20 @@ class _HomePageState extends State<HomePage> {
                 onChanged: _filterCoinList,
               ),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Text(
-                    "Principais Moedas",
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      "Principais Moedas",
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
               // Lista de Criptomoedas usando BlocBuilder
@@ -143,19 +146,24 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           )
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.6,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _filteredCoinList.length,
-                              itemBuilder: (context, index) {
-                                final coin = _filteredCoinList[index];
-                                return CoinListItem(
-                                  coin: coin,
-                                  onTap: () =>
-                                      context.push('/details/${coin.id}'),
-                                );
-                              },
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.6,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _filteredCoinList.length,
+                                itemBuilder: (context, index) {
+                                  final coin = _filteredCoinList[index];
+                                  return CoinListItem(
+                                    coin: coin,
+                                    onTap: () =>
+                                        context.push('/details/${coin.id}'),
+                                  );
+                                },
+                              ),
                             ),
                           );
                   }

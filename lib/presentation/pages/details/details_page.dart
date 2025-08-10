@@ -45,7 +45,11 @@ class _DetailsPageState extends State<DetailsPage>
         }
 
         if (state is CoinDetailsLoading || state is CoinDetailsInitial) {
-          content = const Center(child: CircularProgressIndicator());
+          content = const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.finalBlue,
+            ),
+          );
         } else if (state is CoinDetailsError) {
           content = Center(
             child: Text(
