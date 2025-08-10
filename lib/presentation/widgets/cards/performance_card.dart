@@ -1,4 +1,5 @@
 import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 
 class PerformanceCard extends StatelessWidget {
@@ -25,10 +26,7 @@ class PerformanceCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              color: AppColors.whiteWithOpacity80,
-              fontSize: 10,
-            ),
+            style: FontText.overline,
           ),
           const SizedBox(height: 4),
           Row(
@@ -42,9 +40,8 @@ class PerformanceCard extends StatelessWidget {
               const SizedBox(width: 2),
               Text(
                 value,
-                style: TextStyle(
+                style: FontText.labelMedium.copyWith(
                   color: isPositive ? Colors.green : Colors.red,
-                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:cointrack/domain/entities/coin_entity.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
 import 'package:cointrack/presentation/widgets/widgets.dart';
@@ -77,11 +78,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       "Principais Moedas",
-                      style: const TextStyle(
-                        color: AppColors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontText.titleLarge,
                     ),
                   ],
                 ),
@@ -107,9 +104,8 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               state.message,
-                              style: const TextStyle(
+                              style: FontText.bodyLarge.copyWith(
                                 color: Colors.red,
-                                fontSize: 16,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -118,7 +114,10 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 context.read<CoinBloc>().add(FetchCoinsEvent());
                               },
-                              child: const Text('Tentar novamente'),
+                              child: const Text(
+                                'Tentar novamente',
+                                style: FontText.labelMedium,
+                              ),
                             ),
                           ],
                         ),
@@ -139,10 +138,7 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.all(32.0),
                               child: Text(
                                 'Nenhuma criptomoeda encontrada',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
+                                style: FontText.bodyLarge,
                               ),
                             ),
                           )
@@ -168,14 +164,13 @@ class _HomePageState extends State<HomePage> {
                           );
                   }
 
-                  return const Center(
+                  return Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: Text(
                         'Pressione o botão para carregar as moedas',
-                        style: TextStyle(
+                        style: FontText.titleLarge.copyWith(
                           color: Colors.grey,
-                          fontSize: 16,
                         ),
                       ),
                     ),

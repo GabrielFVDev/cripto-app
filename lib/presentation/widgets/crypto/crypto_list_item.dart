@@ -1,3 +1,4 @@
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../data/models/crypto_data.dart';
@@ -59,13 +60,13 @@ class CryptoListItem extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: crypto.iconColor.withOpacity(0.2),
+        color: crypto.iconColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Center(
         child: Text(
           crypto.icon,
-          style: TextStyle(
+          style: FontText.titleMedium.copyWith(
             color: crypto.iconColor,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -82,19 +83,12 @@ class CryptoListItem extends StatelessWidget {
         children: [
           Text(
             crypto.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: FontText.titleSmall,
           ),
           const SizedBox(height: 4),
           Text(
             crypto.symbol,
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 14,
-            ),
+            style: FontText.bodyMedium,
           ),
         ],
       ),
@@ -107,11 +101,7 @@ class CryptoListItem extends StatelessWidget {
       children: [
         Text(
           crypto.formattedPrice,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: FontText.bodyLarge,
         ),
         const SizedBox(height: 4),
         Row(

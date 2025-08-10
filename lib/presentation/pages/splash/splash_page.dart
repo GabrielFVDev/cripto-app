@@ -1,3 +1,4 @@
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -214,11 +215,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                               children: [
                                 Text(
                                   'CriptoApp',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  style: FontText.displayMedium.copyWith(
                                     letterSpacing: 1.2,
                                     shadows: [
                                       Shadow(
@@ -234,9 +231,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Seu portal para o mundo crypto',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Roboto',
+                                  style: FontText.bodyMedium.copyWith(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     letterSpacing: 0.5,
                                   ),
@@ -272,9 +267,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                             const SizedBox(height: 16),
                             Text(
                               'Carregando...',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Roboto',
+                              style: FontText.bodySmall.copyWith(
                                 color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 0.8,
                               ),
@@ -292,8 +285,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(bottom: 30),
                 child: Text(
                   'v1.0.0',
-                  style: TextStyle(
-                    fontSize: 10,
+                  style: FontText.bodySmall.copyWith(
                     color: Colors.white.withValues(alpha: 0.4),
                     letterSpacing: 1,
                   ),

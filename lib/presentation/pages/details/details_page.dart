@@ -1,4 +1,5 @@
 import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:cointrack/core/utils/generate_spots.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
 import 'package:cointrack/presentation/extensions/entity_extensions.dart';
@@ -79,7 +80,7 @@ class _DetailsPageState extends State<DetailsPage>
           }
 
           content = SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -190,11 +191,10 @@ class _DetailsPageState extends State<DetailsPage>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Gráficos',
-                            style: TextStyle(
+                            style: FontText.titleMedium.copyWith(
                               color: AppColors.white,
-                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -252,11 +252,10 @@ class _DetailsPageState extends State<DetailsPage>
                   labelColor: AppColors.white,
                   dividerColor: Colors.transparent,
                   unselectedLabelColor: AppColors.whiteWithOpacity80,
-                  labelStyle: const TextStyle(
-                    fontSize: 12,
+                  labelStyle: FontText.labelMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-                  unselectedLabelStyle: const TextStyle(fontSize: 12),
+                  unselectedLabelStyle: FontText.labelMedium,
                   tabs: const [
                     Tab(text: '1 Hora'),
                     Tab(text: '1 Semana'),
@@ -286,11 +285,10 @@ class _DetailsPageState extends State<DetailsPage>
                 ),
                 const SizedBox(height: 16),
                 // Performance temporal
-                const Text(
+                Text(
                   'Performance',
-                  style: TextStyle(
+                  style: FontText.titleMedium.copyWith(
                     color: AppColors.white,
-                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -348,7 +346,7 @@ class _DetailsPageState extends State<DetailsPage>
           backgroundColor: AppColors.appBarBackground,
           appBar: AppBar(
             backgroundColor: AppColors.appBarBackground,
-            title: Text(title, style: const TextStyle(color: AppColors.white)),
+            title: Text(title, style: FontText.displaySmall),
             iconTheme: const IconThemeData(color: AppColors.white),
           ),
           body: content,

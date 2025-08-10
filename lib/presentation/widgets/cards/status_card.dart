@@ -1,4 +1,5 @@
 import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 
 class StatusCard extends StatelessWidget {
@@ -24,19 +25,12 @@ class StatusCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              color: AppColors.whiteWithOpacity80,
-              fontSize: 12,
-            ),
+            style: FontText.bodySmall,
           ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: FontText.bodyLarge,
           ),
         ],
       ),

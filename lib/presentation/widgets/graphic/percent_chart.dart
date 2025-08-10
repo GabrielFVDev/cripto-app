@@ -1,3 +1,4 @@
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../core/utils/format_numbers.dart';
@@ -53,11 +54,7 @@ class PercentChart extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               '${isPositive ? '+' : ''}${percentage.toStringAsFixed(2)}%',
-              style: TextStyle(
-                color: color,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: FontText.bodyLarge,
             ),
           ],
         ),

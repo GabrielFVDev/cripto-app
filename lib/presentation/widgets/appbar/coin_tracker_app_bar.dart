@@ -1,3 +1,4 @@
+import 'package:cointrack/core/constants/font_text.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -17,12 +18,7 @@ class CoinTrackerAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.only(left: 8.0),
         child: Text(
           title,
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 20,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.bold,
-          ),
+          style: FontText.titleLarge,
         ),
       ),
     );
