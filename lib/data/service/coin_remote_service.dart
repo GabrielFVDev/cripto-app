@@ -10,7 +10,7 @@ class CoinRemoteService {
 
   Future<List<CoinModel>> fetchCoins() async {
     try {
-      final response = await dio.get('/tickers');
+      final response = await dio.get('/cryptos');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -48,7 +48,8 @@ class CoinRemoteService {
 
   Future<CoinDetailModel> fetchCoinDetails(String coinId) async {
     try {
-      final response = await dio.get('/tickers/$coinId');
+      final response = await dio.get('/cryptos/$coinId');
+
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
         return CoinDetailModel.fromJson(data);
@@ -68,20 +69,39 @@ class CoinRemoteService {
 
   Future<List<PricePointModel>> fetchCoinHistory7d(String coinId) async {
     try {
-      final now = DateTime.now();
-      final start = now.subtract(const Duration(days: 7));
-      final startStr =
-          '${start.year.toString().padLeft(4, '0')}-${start.month.toString().padLeft(2, '0')}-${start.day.toString().padLeft(2, '0')}';
-      final response = await dio.get(
-        '/tickers/$coinId/historical',
-        queryParameters: {
-          'start': startStr,
-          'interval': '1d',
-        },
-      );
+      // Busca dados atuais com informações de performance
+      final response = await dio.get('/cryptos/$coinId/historical');
+
       if (response.statusCode == 200) {
-        final List data = response.data as List;
-        return data.map((e) => PricePointModel.fromJson(e)).toList();
+        final data = response.data as Map<String, dynamic>;
+
+        final currentPrice = (data['price'] as num?)?.toDouble() ?? 0.0;
+        final change7d = (data['percent_change_7d'] as num?)?.toDouble() ?? 0.0;
+
+        // Criar pontos baseados na variação real de 7 dias
+        final points = <PricePointModel>[];
+        final now = DateTime.now();
+
+        // Calcular preço de 7 dias atrás baseado no percent_change_7d
+        final priceSevenDaysAgo = currentPrice / (1 + (change7d / 100));
+
+        // Criar pontos suaves entre o preço de 7 dias atrás e o atual
+        for (int i = 0; i <= 6; i++) {
+          final date = now.subtract(Duration(days: 6 - i));
+          // Interpolação linear entre preço de 7 dias atrás e atual
+          final progress = i / 6.0;
+          final price =
+              priceSevenDaysAgo + (currentPrice - priceSevenDaysAgo) * progress;
+
+          points.add(
+            PricePointModel(
+              time: date,
+              price: price,
+            ),
+          );
+        }
+
+        return points;
       } else {
         throw DioException(
           requestOptions: response.requestOptions,

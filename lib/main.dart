@@ -3,7 +3,6 @@ import 'package:cointrack/core/constants/routes.dart';
 import 'package:cointrack/data/data.dart';
 import 'package:cointrack/domain/domain.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
-import 'package:cointrack/presentation/blocs/bloc/coin_details_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +38,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'CoinTrack',
-
       routerConfig: router,
     );
   }

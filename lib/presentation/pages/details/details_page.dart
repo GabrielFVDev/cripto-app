@@ -198,16 +198,67 @@ class _DetailsPageState extends State<DetailsPage> {
                     Expanded(
                       child: _statCard(
                         title: 'Market Cap',
-                        value:
-                            '\$${d.marketCap.toStringAsFixed(2).replaceAllMapped(RegExp(r"\B(?=(\d{3})+(?!\d))"), (m) => ',')}',
+                        value: _formatLargeNumber(d.marketCap),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _statCard(
                         title: 'Volume 24h',
-                        value:
-                            '\$${d.volume24h.toStringAsFixed(2).replaceAllMapped(RegExp(r"\B(?=(\d{3})+(?!\d))"), (m) => ',')}',
+                        value: _formatLargeNumber(d.volume24h),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Performance temporal
+                const Text(
+                  'Performance',
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _performanceCard(
+                        title: '1 Hora',
+                        value: d.formattedChange.replaceAll(
+                          d.changePercent24h.toStringAsFixed(2),
+                          d.changePercent1h.toStringAsFixed(2),
+                        ),
+                        isPositive: d.changePercent1h > 0,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _performanceCard(
+                        title: '7 Dias',
+                        value: d.formattedChange7d,
+                        isPositive: d.isPositive7d,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _performanceCard(
+                        title: '30 Dias',
+                        value: d.formattedChange30d,
+                        isPositive: d.isPositive30d,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _performanceCard(
+                        title: '1 Ano',
+                        value: d.formattedChange1y,
+                        isPositive: d.isPositive1y,
                       ),
                     ),
                   ],
@@ -216,7 +267,7 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
           );
         } else {
-          content = const SizedBox();
+          content = const SizedBox.shrink();
         }
 
         return Scaffold(
@@ -229,6 +280,51 @@ class _DetailsPageState extends State<DetailsPage> {
           body: content,
         );
       },
+    );
+  }
+
+  Widget _performanceCard({
+    required String title,
+    required String value,
+    required bool isPositive,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.whiteWithOpacity80,
+              fontSize: 10,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                isPositive ? Icons.trending_up : Icons.trending_down,
+                color: isPositive ? Colors.green : Colors.red,
+                size: 14,
+              ),
+              const SizedBox(width: 2),
+              Text(
+                value,
+                style: TextStyle(
+                  color: isPositive ? Colors.green : Colors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -261,5 +357,19 @@ class _DetailsPageState extends State<DetailsPage> {
         ],
       ),
     );
+  }
+
+  String _formatLargeNumber(double value) {
+    if (value >= 1e12) {
+      return '\$${(value / 1e12).toStringAsFixed(2)}T';
+    } else if (value >= 1e9) {
+      return '\$${(value / 1e9).toStringAsFixed(2)}B';
+    } else if (value >= 1e6) {
+      return '\$${(value / 1e6).toStringAsFixed(2)}M';
+    } else if (value >= 1e3) {
+      return '\$${(value / 1e3).toStringAsFixed(2)}K';
+    } else {
+      return '\$${value.toStringAsFixed(2)}';
+    }
   }
 }

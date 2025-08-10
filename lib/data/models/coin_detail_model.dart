@@ -10,6 +10,10 @@ class CoinDetailModel extends CoinDetailEntity {
     required super.changePercent24h,
     required super.marketCap,
     required super.volume24h,
+    required super.changePercent1h,
+    required super.changePercent7d,
+    required super.changePercent30d,
+    required super.changePercent1y,
   });
 
   factory CoinDetailModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +29,7 @@ class CoinDetailModel extends CoinDetailEntity {
       return int.tryParse(v.toString()) ?? 0;
     }
 
+    // Formato da API com quotes.USD
     final quotes = json['quotes'] ?? {};
     final usd = quotes['USD'] ?? {};
 
@@ -37,6 +42,10 @@ class CoinDetailModel extends CoinDetailEntity {
       changePercent24h: d(usd['percent_change_24h']),
       marketCap: d(usd['market_cap']),
       volume24h: d(usd['volume_24h']),
+      changePercent1h: d(usd['percent_change_1h']),
+      changePercent7d: d(usd['percent_change_7d']),
+      changePercent30d: d(usd['percent_change_30d']),
+      changePercent1y: d(usd['percent_change_1y']),
     );
   }
 }
