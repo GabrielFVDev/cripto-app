@@ -134,8 +134,8 @@ class _DetailsPageState extends State<DetailsPage>
                                           ? Icons.trending_up
                                           : Icons.trending_down,
                                       color: d.isPositive
-                                          ? Colors.green
-                                          : Colors.red,
+                                          ? AppColors.success
+                                          : AppColors.error,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 4),
@@ -143,8 +143,8 @@ class _DetailsPageState extends State<DetailsPage>
                                       d.formattedChange,
                                       style: TextStyle(
                                         color: d.isPositive
-                                            ? Colors.green
-                                            : Colors.red,
+                                            ? AppColors.success
+                                            : AppColors.error,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),

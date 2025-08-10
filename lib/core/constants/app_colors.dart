@@ -17,4 +17,7 @@ class AppColors {
   static Color whiteWithOpacity20 = Colors.white.withValues(alpha: .2);
 
   static Color blueWithOpacity30 = Colors.blue.withValues(alpha: .3);
+
+  static Color success = Colors.green;
+  static Color error = Colors.red;
 }
