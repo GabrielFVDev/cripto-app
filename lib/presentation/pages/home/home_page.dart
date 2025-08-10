@@ -1,10 +1,7 @@
 import 'package:cointrack/core/constants/app_colors.dart';
 import 'package:cointrack/domain/entities/coin_entity.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
-import 'package:cointrack/presentation/widgets/appbar/coin_tracker_app_bar.dart';
-import 'package:cointrack/presentation/widgets/cards/coin_tracker_card.dart';
-import 'package:cointrack/presentation/widgets/coin/coin_list_item.dart';
-import 'package:cointrack/presentation/widgets/search/crypto_search_bar.dart';
+import 'package:cointrack/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
-  bool _isSearching = false;
   List<CoinEntity> _filteredCoinList = [];
   List<CoinEntity> _allCoinList = [];
 
@@ -62,13 +58,13 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               CoinTrackerCard(
                 title: 'Mercado de Criptomonedas',
                 description:
                     'Acompanhe as principais moedas digitais em tempo real',
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               // Search Bar
               CryptoSearchBar(
                 controller: _searchController,
@@ -127,8 +123,8 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else if (state is CoinLoaded) {
                     _allCoinList = state.coins
-                        .take(50)
-                        .toList(); // Limitar a 50 moedas
+                        .take(64)
+                        .toList(); // Limitar a 64 moedas
                     if (_filteredCoinList.isEmpty &&
                         _searchController.text.isEmpty) {
                       _filteredCoinList = _allCoinList;

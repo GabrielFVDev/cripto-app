@@ -1,7 +1,6 @@
 import 'package:cointrack/core/constants/app_colors.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
-import 'package:cointrack/presentation/widgets/cards/performance_card.dart';
-import 'package:cointrack/presentation/widgets/cards/status_card.dart';
+import 'package:cointrack/presentation/widgets/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
