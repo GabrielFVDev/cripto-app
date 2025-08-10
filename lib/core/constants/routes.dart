@@ -18,9 +18,17 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/details/:coinId',
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final coinId = state.pathParameters['coinId'] ?? '';
-        return DetailsPage(coinId: coinId);
+        return CustomTransitionPage(
+          child: DetailsPage(coinId: coinId),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        );
       },
     ),
   ],

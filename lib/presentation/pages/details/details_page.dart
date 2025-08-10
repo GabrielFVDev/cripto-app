@@ -1,4 +1,6 @@
 import 'package:cointrack/core/constants/app_colors.dart';
+import 'package:cointrack/core/utils/format_numbers.dart';
+import 'package:cointrack/core/utils/generate_spots.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
 import 'package:cointrack/presentation/widgets/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -187,27 +189,27 @@ class _DetailsPageState extends State<DetailsPage>
                         child: TabBarView(
                           controller: _tabController,
                           children: [
-                            _buildChart(
+                            PercentChart(
                               percentage: d.changePercent1h,
-                              spots: _generateSpotsForPeriod(
+                              spots: generateSpotsForPeriod(
                                 d.price,
                                 d.changePercent1h,
                               ),
                             ),
-                            _buildChart(
+                            PercentChart(
                               percentage: d.changePercent7d,
                               spots: spots,
                             ),
-                            _buildChart(
+                            PercentChart(
                               percentage: d.changePercent30d,
-                              spots: _generateSpotsForPeriod(
+                              spots: generateSpotsForPeriod(
                                 d.price,
                                 d.changePercent30d,
                               ),
                             ),
-                            _buildChart(
+                            PercentChart(
                               percentage: d.changePercent1y,
-                              spots: _generateSpotsForPeriod(
+                              spots: generateSpotsForPeriod(
                                 d.price,
                                 d.changePercent1y,
                               ),
@@ -247,14 +249,14 @@ class _DetailsPageState extends State<DetailsPage>
                     Expanded(
                       child: StatusCard(
                         title: 'Valor de Mercado',
-                        value: _formatLargeNumber(d.marketCap),
+                        value: formatLargeNumber(d.marketCap),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: StatusCard(
                         title: 'Volume 24 horas',
-                        value: _formatLargeNumber(d.volume24h),
+                        value: formatLargeNumber(d.volume24h),
                       ),
                     ),
                   ],
@@ -326,97 +328,9 @@ class _DetailsPageState extends State<DetailsPage>
             title: Text(title, style: const TextStyle(color: AppColors.white)),
             iconTheme: const IconThemeData(color: AppColors.white),
           ),
-          body: content,
+          body: SingleChildScrollView(child: content),
         );
       },
     );
-  }
-
-  Widget _buildChart({
-    required double percentage,
-    required List<FlSpot> spots,
-  }) {
-    final isPositive = percentage > 0;
-    final color = isPositive ? Colors.green : Colors.red;
-
-    return Column(
-      children: [
-        // Indicator row
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isPositive ? Icons.trending_up : Icons.trending_down,
-              color: color,
-              size: 18,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              '${isPositive ? '+' : ''}${percentage.toStringAsFixed(2)}%',
-              style: TextStyle(
-                color: color,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        // Chart
-        Expanded(
-          child: LineChart(
-            LineChartData(
-              titlesData: FlTitlesData(show: false),
-              gridData: const FlGridData(show: false),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: spots,
-                  isCurved: true,
-                  color: color,
-                  barWidth: 2,
-                  dotData: const FlDotData(show: false),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: color.withOpacity(0.2),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _formatLargeNumber(double value) {
-    if (value >= 1e12) {
-      return '\$${(value / 1e12).toStringAsFixed(2)}T';
-    } else if (value >= 1e9) {
-      return '\$${(value / 1e9).toStringAsFixed(2)}B';
-    } else if (value >= 1e6) {
-      return '\$${(value / 1e6).toStringAsFixed(2)}M';
-    } else if (value >= 1e3) {
-      return '\$${(value / 1e3).toStringAsFixed(2)}K';
-    } else {
-      return '\$${value.toStringAsFixed(2)}';
-    }
-  }
-
-  List<FlSpot> _generateSpotsForPeriod(
-    double currentPrice,
-    double percentageChange,
-  ) {
-    final points = <FlSpot>[];
-    final startPrice = currentPrice / (1 + (percentageChange / 100));
-
-    // Gerar 10 pontos suaves entre o preço inicial e final
-    for (int i = 0; i < 10; i++) {
-      final progress = i / 9.0;
-      final price = startPrice + (currentPrice - startPrice) * progress;
-      points.add(FlSpot(i.toDouble(), price));
-    }
-
-    return points;
   }
 }

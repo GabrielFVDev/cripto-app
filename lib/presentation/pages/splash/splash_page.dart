@@ -165,19 +165,19 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(30),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.6),
+                                  color: Colors.black.withValues(alpha: 0.6),
                                   blurRadius: 25,
                                   offset: const Offset(0, 15),
                                 ),
                                 BoxShadow(
                                   color: const Color(
                                     0xFF0F3460,
-                                  ).withOpacity(0.8),
+                                  ).withValues(alpha: 0.8),
                                   blurRadius: 40,
                                   offset: const Offset(0, 8),
                                 ),
                                 BoxShadow(
-                                  color: Colors.blue.withOpacity(0.3),
+                                  color: Colors.blue.withValues(alpha: 0.3),
                                   blurRadius: 60,
                                   offset: const Offset(0, 0),
                                 ),
@@ -221,7 +221,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                     letterSpacing: 1.2,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.black.withOpacity(0.5),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         offset: const Offset(0, 2),
                                         blurRadius: 4,
                                       ),
@@ -233,7 +235,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                   'Seu portal para o mundo crypto',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -256,9 +258,11 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                               width: 200,
                               child: LinearProgressIndicator(
                                 value: _progressAnimation.value,
-                                backgroundColor: Colors.white.withOpacity(0.2),
+                                backgroundColor: Colors.white.withValues(
+                                  alpha: 0.2,
+                                ),
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white.withOpacity(0.8),
+                                  Colors.white.withValues(alpha: 0.8),
                                 ),
                                 minHeight: 3,
                               ),
@@ -268,7 +272,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                               'Carregando...',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 0.8,
                               ),
                             ),
@@ -287,7 +291,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                   'v1.0.0',
                   style: TextStyle(
                     fontSize: 10,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                     letterSpacing: 1,
                   ),
                 ),
