@@ -153,10 +153,17 @@ class _HomePageState extends State<HomePage> {
                                 itemCount: _filteredCoinList.length,
                                 itemBuilder: (context, index) {
                                   final coin = _filteredCoinList[index];
-                                  return CoinListItem(
-                                    coin: coin,
-                                    onTap: () =>
-                                        context.push('/details/${coin.id}'),
+                                  final _isLast =
+                                      index == _filteredCoinList.length - 1;
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: _isLast ? 40.0 : 0.0,
+                                    ),
+                                    child: CoinListItem(
+                                      coin: coin,
+                                      onTap: () =>
+                                          context.push('/details/${coin.id}'),
+                                    ),
                                   );
                                 },
                               ),
