@@ -1,5 +1,6 @@
 import 'package:cointrack/core/constants/app_colors.dart';
 import 'package:cointrack/domain/entities/coin_entity.dart';
+import 'package:cointrack/presentation/extensions/entity_extensions.dart';
 import 'package:flutter/material.dart';
 
 class CoinListItem extends StatelessWidget {

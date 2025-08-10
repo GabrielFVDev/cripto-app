@@ -1,19 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import '../../../core/utils/format_numbers.dart';
 
 class PercentChart extends StatelessWidget {
-  // Custom formatter: keeps two digits after the decimal and uses K/M/B/T suffixes
+  // Custom formatter usando a formatação padrão da aplicação
   String _formatShortNumber(double value) {
     if (value >= 1e12) {
-      return '${(value / 1e12).toStringAsFixed(2)}T';
+      return '${formatNumberWithDots(value / 1e12, decimals: 2)}T';
     } else if (value >= 1e9) {
-      return '${(value / 1e9).toStringAsFixed(2)}B';
+      return '${formatNumberWithDots(value / 1e9, decimals: 2)}B';
     } else if (value >= 1e6) {
-      return '${(value / 1e6).toStringAsFixed(2)}M';
+      return '${formatNumberWithDots(value / 1e6, decimals: 2)}M';
     } else if (value >= 1e3) {
-      return '${(value / 1e3).toStringAsFixed(2)}K';
+      return '${formatNumberWithDots(value / 1e3, decimals: 2)}K';
     } else {
-      return value.toStringAsFixed(2);
+      return formatNumberWithDots(value, decimals: 2);
     }
   }
 

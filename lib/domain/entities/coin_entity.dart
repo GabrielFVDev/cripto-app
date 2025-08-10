@@ -16,10 +16,4 @@ class CoinEntity {
   });
 
   bool get isPositive => changePercent24h > 0;
-
-  String get formattedPrice =>
-      '\$${price < 1 ? price.toStringAsFixed(4) : price.toStringAsFixed(2)}';
-
-  String get formattedChange =>
-      '${isPositive ? '+' : ''}${changePercent24h.toStringAsFixed(2)}%';
 }

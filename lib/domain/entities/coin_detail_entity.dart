@@ -31,19 +31,4 @@ class CoinDetailEntity {
   bool get isPositive7d => changePercent7d > 0;
   bool get isPositive30d => changePercent30d > 0;
   bool get isPositive1y => changePercent1y > 0;
-
-  String get formattedPrice =>
-      '\$${price < 1 ? price.toStringAsFixed(4) : price.toStringAsFixed(2)}';
-
-  String get formattedChange =>
-      '${isPositive ? '+' : ''}${changePercent24h.toStringAsFixed(2)}%';
-
-  String get formattedChange7d =>
-      '${isPositive7d ? '+' : ''}${changePercent7d.toStringAsFixed(2)}%';
-
-  String get formattedChange30d =>
-      '${isPositive30d ? '+' : ''}${changePercent30d.toStringAsFixed(2)}%';
-
-  String get formattedChange1y =>
-      '${isPositive1y ? '+' : ''}${changePercent1y.toStringAsFixed(2)}%';
 }

@@ -1,7 +1,7 @@
 import 'package:cointrack/core/constants/app_colors.dart';
-import 'package:cointrack/core/utils/format_numbers.dart';
 import 'package:cointrack/core/utils/generate_spots.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
+import 'package:cointrack/presentation/extensions/entity_extensions.dart';
 import 'package:cointrack/presentation/widgets/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -272,14 +272,14 @@ class _DetailsPageState extends State<DetailsPage>
                     Expanded(
                       child: StatusCard(
                         title: 'Valor de Mercado',
-                        value: formatLargeNumber(d.marketCap),
+                        value: d.formattedMarketCap,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: StatusCard(
                         title: 'Volume 24 horas',
-                        value: formatLargeNumber(d.volume24h),
+                        value: d.formattedVolume24h,
                       ),
                     ),
                   ],
