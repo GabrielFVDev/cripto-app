@@ -1,6 +1,7 @@
 import 'package:cointrack/core/constants/app_colors.dart';
 import 'package:cointrack/presentation/blocs/bloc.dart';
-import 'package:cointrack/presentation/blocs/bloc/coin_details_bloc.dart';
+import 'package:cointrack/presentation/widgets/cards/performance_card.dart';
+import 'package:cointrack/presentation/widgets/cards/status_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,20 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  String _formatLargeNumber(double value) {
+    if (value >= 1e12) {
+      return '\$${(value / 1e12).toStringAsFixed(2)}T';
+    } else if (value >= 1e9) {
+      return '\$${(value / 1e9).toStringAsFixed(2)}B';
+    } else if (value >= 1e6) {
+      return '\$${(value / 1e6).toStringAsFixed(2)}M';
+    } else if (value >= 1e3) {
+      return '\$${(value / 1e3).toStringAsFixed(2)}K';
+    } else {
+      return '\$${value.toStringAsFixed(2)}';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -196,14 +211,14 @@ class _DetailsPageState extends State<DetailsPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: _statCard(
+                      child: StatusCard(
                         title: 'Market Cap',
                         value: _formatLargeNumber(d.marketCap),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _statCard(
+                      child: StatusCard(
                         title: 'Volume 24h',
                         value: _formatLargeNumber(d.volume24h),
                       ),
@@ -224,7 +239,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: _performanceCard(
+                      child: PerformanceCard(
                         title: '1 Hora',
                         value: d.formattedChange.replaceAll(
                           d.changePercent24h.toStringAsFixed(2),
@@ -235,7 +250,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _performanceCard(
+                      child: PerformanceCard(
                         title: '7 Dias',
                         value: d.formattedChange7d,
                         isPositive: d.isPositive7d,
@@ -247,7 +262,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: _performanceCard(
+                      child: PerformanceCard(
                         title: '30 Dias',
                         value: d.formattedChange30d,
                         isPositive: d.isPositive30d,
@@ -255,7 +270,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _performanceCard(
+                      child: PerformanceCard(
                         title: '1 Ano',
                         value: d.formattedChange1y,
                         isPositive: d.isPositive1y,
@@ -281,95 +296,5 @@ class _DetailsPageState extends State<DetailsPage> {
         );
       },
     );
-  }
-
-  Widget _performanceCard({
-    required String title,
-    required String value,
-    required bool isPositive,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: AppColors.whiteWithOpacity80,
-              fontSize: 10,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isPositive ? Icons.trending_up : Icons.trending_down,
-                color: isPositive ? Colors.green : Colors.red,
-                size: 14,
-              ),
-              const SizedBox(width: 2),
-              Text(
-                value,
-                style: TextStyle(
-                  color: isPositive ? Colors.green : Colors.red,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _statCard({required String title, required String value}) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: AppColors.whiteWithOpacity80,
-              fontSize: 12,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatLargeNumber(double value) {
-    if (value >= 1e12) {
-      return '\$${(value / 1e12).toStringAsFixed(2)}T';
-    } else if (value >= 1e9) {
-      return '\$${(value / 1e9).toStringAsFixed(2)}B';
-    } else if (value >= 1e6) {
-      return '\$${(value / 1e6).toStringAsFixed(2)}M';
-    } else if (value >= 1e3) {
-      return '\$${(value / 1e3).toStringAsFixed(2)}K';
-    } else {
-      return '\$${value.toStringAsFixed(2)}';
-    }
   }
 }
