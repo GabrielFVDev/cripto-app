@@ -1,4 +1,4 @@
-package com.example.cripto_app
+package com.gabrielfvdev.cripto_app
 
 import io.flutter.embedding.android.FlutterActivity
 
