@@ -12,7 +12,8 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
         final coins = await getCoins.execute();
         emit(CoinLoaded(coins));
       } catch (e) {
-        emit(CoinError('Erro ao buscar moedas'));
+        print('Erro na API: $e'); // Para debug
+        emit(CoinError('Erro ao buscar moedas: ${e.toString()}'));
       }
     });
   }

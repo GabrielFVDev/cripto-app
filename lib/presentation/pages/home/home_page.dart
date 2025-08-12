@@ -114,9 +114,11 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () {
                                 context.read<CoinBloc>().add(FetchCoinsEvent());
                               },
-                              child: const Text(
+                              child: Text(
                                 'Tentar novamente',
-                                style: FontText.labelMedium,
+                                style: FontText.labelMedium.copyWith(
+                                  color: AppColors.blackVariation,
+                                ),
                               ),
                             ),
                           ],
