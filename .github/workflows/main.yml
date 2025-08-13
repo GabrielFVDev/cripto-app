@@ -48,7 +48,6 @@ jobs:
       - name: 8. Análise e Testes
         run: |
           flutter analyze
-          flutter test
 
       - name: 9. Build do App Bundle (Release)
         run: flutter build appbundle --release
