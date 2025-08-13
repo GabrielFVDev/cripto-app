@@ -1,0 +1,74 @@
+name: Build and Release Flutter App
+
+on:
+  push:
+    branches:
+      - main # Roda quando houver push na branch main
+  pull_request:
+    branches:
+      - main # Roda em pull requests para a main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: 2. Decodificar e Salvar Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > ${{ github.workspace }}/android/app/upload-keystore.jks
+
+      - name: 3. Criar Arquivo key.properties
+        run: |
+          echo "storeFile=${{ github.workspace }}/android/app/upload-keystore.jks" > ${{ github.workspace }}/android/app/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> ${{ github.workspace }}/android/app/key.properties
+          echo "storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}" >> ${{ github.workspace }}/android/app/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> ${{ github.workspace }}/android/app/key.properties
+
+      - name: 4. Decodificar Credenciais Google Play
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > ${{ github.workspace }}/service-account.json
+
+      - name: 5. Setup do Java (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: 6. Setup do Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: "3.32.5" # Opcional: trave para uma versão específica
+
+      - name: 7. Instalar Dependências
+        run: flutter pub get
+
+      - name: 8. Análise e Testes
+        run: |
+          flutter analyze
+          flutter test
+
+      - name: 9. Build do App Bundle (Release)
+        run: flutter build appbundle --release
+
+      - name: 10. Deploy para Google Play Store (Internal Track)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ github.workspace }}/service-account.json
+          packageName: com.gabrielfvdev.cripto_app # <-- MUDE AQUI para o seu package name
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: internal # Publica no track de teste interno
+          status: completed # 'draft' cria um rascunho, 'completed' publica na track.
+
+      - name: 11. Deploy para Google Play Store (Closed Track)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ github.workspace }}/service-account.json
+          packageName: com.gabrielfvdev.cripto_app # <-- MUDE AQUI para o seu package name
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: closed # Publica no track de teste fechado
+          status: completed # 'draft' cria um rascunho, 'completed' publica na track.
