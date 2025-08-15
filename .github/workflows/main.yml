@@ -81,7 +81,22 @@ jobs:
       - name: Decode Google Play Service Account
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
+          echo "Checking if PLAY_STORE_CREDENTIALS secret exists..."
+          if [ -z "${{ secrets.PLAY_STORE_CREDENTIALS }}" ]; then
+            echo "ERROR: PLAY_STORE_CREDENTIALS secret is empty!"
+            exit 1
+          fi
+          echo "Decoding service account JSON..."
           echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" | base64 -d > service-account.json
+          echo "Service account file size: $(stat -c%s service-account.json) bytes"
+          if [ ! -s service-account.json ]; then
+            echo "ERROR: Service account file is empty after decoding!"
+            echo "First 100 chars of base64 secret: ${PLAY_STORE_CREDENTIALS:0:100}"
+            exit 1
+          fi
+          echo "✅ Service account JSON decoded successfully!"
+        env:
+          PLAY_STORE_CREDENTIALS: ${{ secrets.PLAY_STORE_CREDENTIALS }}
 
       - name: Deploy to Google Play Store (Closed Testing)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
