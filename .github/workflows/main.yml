@@ -56,6 +56,9 @@ jobs:
           keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
           storeFile=../app/keystore.jks
           EOF
+          echo "=== key.properties content ==="
+          cat android/key.properties
+          echo "=== end key.properties ==="
 
       - name: Verify Keystore
         run: |
