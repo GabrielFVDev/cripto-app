@@ -81,13 +81,13 @@ jobs:
       - name: Decode Google Play Service Account
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          echo "Checking if PLAY_STORE_CREDENTIALS secret exists..."
-          if [ -z "$PLAY_STORE_CREDENTIALS" ]; then
-            echo "ERROR: PLAY_STORE_CREDENTIALS secret is empty!"
-            exit 1
-          fi
-          echo "Decoding service account JSON..."
-          echo "$PLAY_STORE_CREDENTIALS" | base64 -d > service-account.json
+          echo "Creating service account JSON file..."
+          # Write the base64 secret to a temp file first
+          printf '%s' "$PLAY_STORE_CREDENTIALS" > temp_base64.txt
+          # Then decode it
+          base64 -d temp_base64.txt > service-account.json
+          # Clean up temp file
+          rm temp_base64.txt
           echo "Service account file size: $(stat -c%s service-account.json) bytes"
           if [ ! -s service-account.json ]; then
             echo "ERROR: Service account file is empty after decoding!"
