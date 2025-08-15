@@ -86,6 +86,7 @@ jobs:
           printf '%s' "$PLAY_STORE_CREDENTIALS" > temp_base64.txt
           # Then decode it
           base64 -d temp_base64.txt > service-account.json
+
           # Clean up temp file
           rm temp_base64.txt
           echo "Service account file size: $(stat -c%s service-account.json) bytes"
