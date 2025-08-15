@@ -3,71 +3,70 @@ name: Build and Release Flutter App
 on:
   push:
     branches:
-      - main # Roda quando houver push na branch main
+      - main
   pull_request:
     branches:
-      - main # Roda em pull requests para a main
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Checkout do Repositório
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 2. Decodificar e Salvar Keystore
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > ${{ github.workspace }}/android/app/upload-keystore.jks
-          ls -la ${{ github.workspace }}/android/app/upload-keystore.jks
-          file ${{ github.workspace }}/android/app/upload-keystore.jks
-
-      - name: 3. Criar Arquivo key.properties
-        run: |
-          echo "storeFile=${{ github.workspace }}/android/app/upload-keystore.jks" > ${{ github.workspace }}/android/app/key.properties
-          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> ${{ github.workspace }}/android/app/key.properties
-          echo "storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}" >> ${{ github.workspace }}/android/app/key.properties
-          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> ${{ github.workspace }}/android/app/key.properties
-          cat ${{ github.workspace }}/android/app/key.properties
-
-      - name: 3.1. Verificar Keystore
-        run: |
-          echo "Verificando se o keystore foi criado corretamente..."
-          ls -la ${{ github.workspace }}/android/app/upload-keystore.jks
-          echo "Tentando verificar o keystore com keytool..."
-          keytool -list -keystore ${{ github.workspace }}/android/app/upload-keystore.jks -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" || echo "Erro ao verificar keystore"
-
-      - name: 4. Decodificar Credenciais Google Play
-        run: |
-          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 -d > ${{ github.workspace }}/service-account.json
-
-      - name: 5. Setup do Java (JDK)
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
 
-      - name: 6. Setup do Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          flutter-version: "3.32.5" # Opcional: trave para uma versão específica
+          flutter-version: "3.24.0"
 
-      - name: 7. Instalar Dependências
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: 8. Análise e Testes
+      - name: Run Analysis and Tests
         run: |
           flutter analyze
+          flutter test
 
-      - name: 9. Build do App Bundle (Release)
+      - name: Decode Android Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
+
+      - name: Create key.properties
+        run: |
+          cat << EOF > android/key.properties
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=../app/keystore.jks
+          EOF
+
+      - name: Verify Keystore
+        run: |
+          ls -la android/app/keystore.jks
+          keytool -list -keystore android/app/keystore.jks -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" || echo "Keystore verification failed"
+
+      - name: Build Android App Bundle
         run: flutter build appbundle --release
 
-      - name: 10. Deploy para Google Play Store (Internal Track)
+      - name: Decode Google Play Service Account
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 -d > service-account.json
+
+      - name: Deploy to Google Play Store (Closed Testing)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ github.workspace }}/service-account.json
-          packageName: com.gabrielfvdev.cripto_app # <-- MUDE AQUI para o seu package name
+          serviceAccountJson: service-account.json
+          packageName: com.gabrielfvdev.cripto_app
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: internal # Publica no track de teste interno
-          status: completed # 'draft' cria um rascunho, 'completed' publica na track.
+          track: alpha
+          status: completed
