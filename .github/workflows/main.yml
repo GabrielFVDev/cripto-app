@@ -32,7 +32,21 @@ jobs:
 
       - name: Decode Android Keystore
         run: |
+          echo "Checking if ANDROID_KEYSTORE_BASE64 secret exists..."
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "ERROR: ANDROID_KEYSTORE_BASE64 secret is empty!"
+            exit 1
+          fi
+          echo "Decoding keystore..."
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
+          echo "Keystore size: $(stat -c%s android/app/keystore.jks) bytes"
+          if [ ! -s android/app/keystore.jks ]; then
+            echo "ERROR: Keystore file is empty after decoding!"
+            echo "First 100 chars of base64 secret: ${ANDROID_KEYSTORE_BASE64:0:100}"
+            exit 1
+          fi
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
 
       - name: Create key.properties
         run: |
@@ -45,8 +59,18 @@ jobs:
 
       - name: Verify Keystore
         run: |
+          echo "=== Keystore Information ==="
           ls -la android/app/keystore.jks
-          keytool -list -keystore android/app/keystore.jks -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" || echo "Keystore verification failed"
+          echo "File type: $(file android/app/keystore.jks)"
+          echo "=== Testing keystore ==="
+          if keytool -list -keystore android/app/keystore.jks -storepass "${{ secrets.ANDROID_STORE_PASSWORD }}" -v; then
+            echo "✅ Keystore verification SUCCESS!"
+          else
+            echo "❌ Keystore verification FAILED!"
+            echo "Keystore content (first 50 bytes as hex):"
+            xxd -l 50 android/app/keystore.jks || echo "Could not read keystore content"
+            exit 1
+          fi
 
       - name: Build Android App Bundle
         run: flutter build appbundle --release
