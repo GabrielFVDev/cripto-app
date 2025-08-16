@@ -1,4 +1,4 @@
-name: Release app
+name: Lançamento do app
 
 on:
   push:
