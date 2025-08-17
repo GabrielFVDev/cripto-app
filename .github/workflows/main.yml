@@ -1,4 +1,4 @@
-name: Lançamento do app
+name: Teste
 
 on:
   push:
@@ -76,7 +76,17 @@ jobs:
           fi
 
       - name: Build Android App Bundle
-        run: flutter build appbundle --release
+        run: |
+          echo "=== Starting bundle build ==="
+          echo "Checking key.properties file..."
+          ls -la android/key.properties
+          echo "=== key.properties content ==="
+          cat android/key.properties
+          echo "=== Building bundle ==="
+          flutter build appbundle --release
+          echo "=== Checking generated bundle ==="
+          ls -la build/app/outputs/bundle/release/
+          echo "Bundle size: $(stat -c%s build/app/outputs/bundle/release/app-release.aab) bytes"
 
       - name: Decode Google Play Service Account
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
